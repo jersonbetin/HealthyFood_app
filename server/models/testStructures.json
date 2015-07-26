@@ -1,0 +1,9 @@
+//scructure admins
+{
+  "user" : "jdBetin",
+  "pass" : "1q2w3e4r",
+  "name" : {
+    "first" : "jerson",
+    "last" : "betin"
+  }
+}
