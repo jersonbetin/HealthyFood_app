@@ -1,2 +1,2 @@
 node_modules
-server/controllers/helpers/service.js
+server/controllers/helpers/config.js
