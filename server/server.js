@@ -22,7 +22,6 @@ function start(){
     db.once('open', function callback(){
       console.log('conexion establecida');
       console.log('Database HealthyFood');
-
       app.use(logger());
       app.use(bodyParser.urlencoded({ extended : true }));      
       app.use(bodyParser.json());

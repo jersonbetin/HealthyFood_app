@@ -1,34 +1,41 @@
+"use strict"
 var mongoose = require('mongoose');
-var adminsModel = require('../../../models/admin').admin;
-var validateStructure = require('./admins_validation');
+var clientsModel = require('../../../models/clients').client; 
 var helpers = require('../../helpers/helpers');
-var personalCodesStatus = require('./personalCodeAdmin');
+var validateStructure = require('./clientsValidation');
+var personalCodesStatus = require('./personalCodeclient');
 
-//add new admin
-function addAdmin(req, res){
-  var validate = validateStructure.validateAdmins;
-  validateStructure.validateAdmins(req.body, function(testAuthorized, data){   
+//add new client
+function addClient(req, res){
+  console.log("add ",req.body);
+  var validate = validateStructure.validateClients;
+  validate(req.body, function(testAuthorized, data){
+    console.log("entro aqui");
     if(testAuthorized){
       var passSha1 = helpers.encrypt(req.body.pass);
-      adminsModel.create({
-        user:req.body.user,
+      clientsModel.create({
+        email:req.body.email,
         password: passSha1,
         name: {
           first : req.body.name.first,
           last : req.body.name.last
-        }
-      }, function(err, admin){
+        },
+        phone : req.body.phone,
+        address : req.body.address
+      },function(err, client){
           if(!err){
-            var adminCreate = {
-              "user" : admin.user,
+            var clientCreate = {
+              "email" : client.email,
               "name" : {
-                "first" : admin.name.first,
-                "last" : admin.name.last
-              }
+                "first" : client.name.first,
+                "last" : client.name.last
+              },
+              "phone" : client.phone,
+              "address" : client.address
             };
             res
               .status(201)
-              .send({adminCreate:adminCreate});
+              .send({clientCreate:clientCreate});
           }else{
             if(err.code == 11000){
               personalCodesStatus.res406(res);
@@ -36,38 +43,34 @@ function addAdmin(req, res){
               personalCodesStatus.res500(res);
             }            
           }
-        }
-      );
+      });
     }else{
       validateStructure.resToIncorrectStructure(req, res, data);
     }
   });
 }
-
-//get all admins in the data base
-function getAllAdmins(req, res){
-  adminsModel.find({}, {password:0}, function(err, admins){
+//get all clients in the data base
+function getAllClients(req, res){
+  clientsModel.find({}, {password:0}, function(err, clients){
     if(!err){
       res
       .status(200)
       .send({
-        admins:admins
+        clients : clients
       });
     }else{
       personalCodesStatus.res500(res);
     }
   });
 }
-
-
-//get one admin in the data base
+//get one client in the data base
 function getOneAdmins(req, res){
-  adminsModel.findOne({user:req.params.id}, {password:0}, function(err, admins){
+  clientsModel.findOne({email:req.params.id}, {password:0}, function(err, client){
     if(!err){
       res
       .status(200)
       .send({
-        admins:admins
+        client : client
       });
     }else{
       personalCodesStatus.res500(res);
@@ -77,8 +80,6 @@ function getOneAdmins(req, res){
 
 //update one criterion 
 function updateOneCriterion(req, res, model){
-
-  // console.log(req.body.name.first);
   var isDefined = helpers.isDefined;
   var info = {};
   if (isDefined(req.body.name)){    
@@ -89,32 +90,36 @@ function updateOneCriterion(req, res, model){
       model.name.last= req.body.name.last;
     }
   }
+  if (isDefined(req.body.phone)) {
+    model.phone = req.body.name.phone;
+  }
+
+  if (isDefined(req.body.address)) {
+    model.address = req.body.name.address;
+  }
   if (isDefined(req.body.pass)) {
     var passSha1 = helpers.encrypt(req.body.pass);
     model.password = passSha1;
   }
-  model.save(function(err, admin){
+  model.save(function(err, client){
     if(!err){
       res
         .status(200)
-        .send({admin : admin});
+        .send({client : client});
     }else{
       personalCodesStatus.res500(res);
     }
   });
 }
 
-//update admin 
 function updateInfoAdmins(req, res){
-  // var field = req.query.field.split(',');
-  // console.log(field.length);
   console.log(req.params.id);
-  adminsModel.findOne({user: req.params.id}, function(err, admin){
+  clientsModel.findOne({email: req.params.id}, function(err, client){
     if(!err){
-      console.log(admin);
-      if(admin){
+      console.log(client);
+      if(client){
         console.log('entro 1');
-        updateOneCriterion(req, res, admin);
+        updateOneCriterion(req, res, client);
       }else{
         personalCodesStatus.res404(res);
       }
@@ -123,10 +128,9 @@ function updateInfoAdmins(req, res){
     }
   });
 }
-
 module.exports = {
-  addAdmin : addAdmin,
-  getAllAdmins : getAllAdmins,
-  getOneAdmins : getOneAdmins,
-  updateInfoAdmins : updateInfoAdmins
-};
+  getAllClients : getAllClients,
+ addClient : addClient,
+ getOneAdmins : getOneAdmins,
+ updateInfoAdmins : updateInfoAdmins
+}

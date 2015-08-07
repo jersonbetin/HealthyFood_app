@@ -7,3 +7,15 @@
     "last" : "betin"
   }
 }
+
+//scructure user
+{
+  "email" : "nitrojd0411@hotmail.com",
+  "pass" : "1q2w3e4r",
+  "name" : {
+    "first" : "jerson",
+    "last" : "betin"
+  },
+  "phone" : "7588217",
+  "address" : "cr 16 cll 5 # 5-57"
+}
