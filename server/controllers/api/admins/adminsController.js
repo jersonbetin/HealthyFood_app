@@ -61,7 +61,7 @@ function getAllAdmins(req, res){
 
 
 //get one admin in the data base
-function getOneAdmins(req, res){
+function getOneAdmin(req, res){
   adminsModel.findOne({user:req.params.id}, {password:0}, function(err, admins){
     if(!err){
       res
@@ -105,7 +105,7 @@ function updateOneCriterion(req, res, model){
 }
 
 //update admin 
-function updateInfoAdmins(req, res){
+function updateInfoAdmin(req, res){
   // var field = req.query.field.split(',');
   // console.log(field.length);
   console.log(req.params.id);
@@ -127,6 +127,6 @@ function updateInfoAdmins(req, res){
 module.exports = {
   addAdmin : addAdmin,
   getAllAdmins : getAllAdmins,
-  getOneAdmins : getOneAdmins,
-  updateInfoAdmins : updateInfoAdmins
+  getOneAdmin : getOneAdmin,
+  updateInfoAdmin : updateInfoAdmin
 };

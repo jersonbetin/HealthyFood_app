@@ -64,7 +64,7 @@ function getAllClients(req, res){
   });
 }
 //get one client in the data base
-function getOneAdmins(req, res){
+function getOneClient(req, res){
   clientsModel.findOne({email:req.params.id}, {password:0}, function(err, client){
     if(!err){
       res
@@ -91,11 +91,11 @@ function updateOneCriterion(req, res, model){
     }
   }
   if (isDefined(req.body.phone)) {
-    model.phone = req.body.name.phone;
+    model.phone = req.body.phone;
   }
 
   if (isDefined(req.body.address)) {
-    model.address = req.body.name.address;
+    model.address = req.body.address;
   }
   if (isDefined(req.body.pass)) {
     var passSha1 = helpers.encrypt(req.body.pass);
@@ -112,7 +112,7 @@ function updateOneCriterion(req, res, model){
   });
 }
 
-function updateInfoAdmins(req, res){
+function updateInfoClient(req, res){
   console.log(req.params.id);
   clientsModel.findOne({email: req.params.id}, function(err, client){
     if(!err){
@@ -129,8 +129,8 @@ function updateInfoAdmins(req, res){
   });
 }
 module.exports = {
-  getAllClients : getAllClients,
+ getAllClients : getAllClients,
  addClient : addClient,
- getOneAdmins : getOneAdmins,
- updateInfoAdmins : updateInfoAdmins
+ getOneClient : getOneClient,
+ updateInfoClient : updateInfoClient
 }

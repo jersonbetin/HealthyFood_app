@@ -1,8 +1,9 @@
 "use strict";
 
 // var usersController = require("../controllers/api/usersController");
-var adminsController = require("../controllers/api/admins/adminsController");
-var clientsController = require("../controllers/api/clients/clientsController");
+var adminController = require("../controllers/api/admins/adminsController");
+var clientController = require("../controllers/api/clients/clientsController");
+var restaurantController = require("../controllers/api/restaurants/restaurantsController");
 var middleware = require("../middlewares/middleware");
 
 module.exports = function apiRoutes(app) {
@@ -11,21 +12,29 @@ module.exports = function apiRoutes(app) {
       next();
   });
 
-  //path about admins
+  //path about admin
   app.route("/api/admin")
-    .get(middleware.checkToken, adminsController.getAllAdmins)
-    .post(adminsController.addAdmin);
+    .get(middleware.checkToken, adminController.getAllAdmins)
+    .post(adminController.addAdmin);
   app.route("/api/admin/:id")
-    .get(middleware.checkToken, adminsController.getOneAdmins)
-    .put(middleware.checkToken, adminsController.updateInfoAdmins); 
+    .get(middleware.checkToken, adminController.getOneAdmin)
+    .put(middleware.checkToken, adminController.updateInfoAdmin); 
 
   //path about clientes
   app.route("/api/client")
-    .get(middleware.checkToken, clientsController.getAllClients)
-    .post(clientsController.addClient);
+    .get(middleware.checkToken, clientController.getAllClients)
+    .post(clientController.addClient);
   app.route("/api/client/:id")
-    .get(middleware.checkToken, clientsController.getOneAdmins)
-    .put(middleware.checkToken, clientsController.updateInfoAdmins);
+    .get(middleware.checkToken, clientController.getOneClient)
+    .put(middleware.checkToken, clientController.updateInfoClient);
+
+  //path about restaurant
+  app.route("/api/restaurant")
+    .get(middleware.checkToken, restaurantController.getRestaurants)
+    .post(restaurantController.addRestaurant);
+   app.route("/api/restaurant/:id")
+    .get(middleware.checkToken, restaurantController.getOneRestaurant)
+    .put(middleware.checkToken, restaurantController.updateInfoRestaurant);
 
   app.post('/', function(req, res){
     console.log(req.body.user);

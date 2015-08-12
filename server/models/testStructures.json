@@ -19,3 +19,17 @@
   "phone" : "7588217",
   "address" : "cr 16 cll 5 # 5-57"
 }
+
+//scructure restaurant
+{
+  "user" : "perrosCaliente",
+  "pass" : "1q2w3e4r",
+  "email" : "nitrojd0411@hotmail.com",
+  "name" : "Perros calientes",
+  "phone" : "7588217",
+  "address" : "cr 16 cll 5 # 5-57",  
+  "facebook" : "7588217",
+  "twitter" : "jerson.betin",
+  "instagram" : "jersonbetin",
+  "website" : "www.perroscalientes.com"
+}
