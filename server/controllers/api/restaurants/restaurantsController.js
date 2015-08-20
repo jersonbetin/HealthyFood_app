@@ -86,7 +86,6 @@ function getOneRestaurant(req, res){
 //update one criterion 
 function updateOneCriterion(req, res, model){
   var isDefined = helpers.isDefined;
-  var info = {};
 
   if (isDefined(req.body.name)) {
     model.name = req.body.name;
@@ -143,9 +142,37 @@ function updateInfoRestaurant(req, res){
   });
 }
 
+//delete restaurant
+function deleteRestaurant(req, res){
+  restaurantModel.findOne({user:req.params.id}, function(err, restaurant){
+    console.log(err);
+    if(!err){
+      if(restaurant){
+        restaurant.remove(function(err){
+          if(!err){            
+            res
+            .status(200)
+            .send({
+              "message":"the restaurant was removed"
+            });
+          }else{
+            personalCodesStatus.res500(res);
+          }
+        });
+      }else{
+        personalCodesStatus.res404(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
+
+
 module.exports = {
   addRestaurant : addRestaurant,
   getRestaurants : getRestaurants,
   getOneRestaurant : getOneRestaurant,
-  updateInfoRestaurant : updateInfoRestaurant
+  updateInfoRestaurant : updateInfoRestaurant,
+  deleteRestaurant : deleteRestaurant
 }

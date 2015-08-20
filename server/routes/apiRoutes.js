@@ -4,6 +4,7 @@
 var adminController = require("../controllers/api/admins/adminsController");
 var clientController = require("../controllers/api/clients/clientsController");
 var restaurantController = require("../controllers/api/restaurants/restaurantsController");
+var ingredientController = require("../controllers/api/ingredients/ingredientController");
 var middleware = require("../middlewares/middleware");
 
 module.exports = function apiRoutes(app) {
@@ -18,7 +19,8 @@ module.exports = function apiRoutes(app) {
     .post(adminController.addAdmin);
   app.route("/api/admin/:id")
     .get(middleware.checkToken, adminController.getOneAdmin)
-    .put(middleware.checkToken, adminController.updateInfoAdmin); 
+    .put(middleware.checkToken, adminController.updateInfoAdmin) 
+    .delete(middleware.checkToken, adminController.deleteAdmin); 
 
   //path about clientes
   app.route("/api/client")
@@ -26,15 +28,25 @@ module.exports = function apiRoutes(app) {
     .post(clientController.addClient);
   app.route("/api/client/:id")
     .get(middleware.checkToken, clientController.getOneClient)
-    .put(middleware.checkToken, clientController.updateInfoClient);
+    .put(middleware.checkToken, clientController.updateInfoClient)
+    .delete(middleware.checkToken, clientController.deleteClient);
 
   //path about restaurant
   app.route("/api/restaurant")
     .get(middleware.checkToken, restaurantController.getRestaurants)
     .post(restaurantController.addRestaurant);
-   app.route("/api/restaurant/:id")
+  app.route("/api/restaurant/:id")
     .get(middleware.checkToken, restaurantController.getOneRestaurant)
-    .put(middleware.checkToken, restaurantController.updateInfoRestaurant);
+    .put(middleware.checkToken, restaurantController.updateInfoRestaurant)
+    .delete(middleware.checkToken, restaurantController.deleteRestaurant);
+
+  //path about ingredient
+  app.route("/api/ingredient")
+    .get(middleware.checkToken,ingredientController.getIngredients)
+    .post(middleware.checkToken,ingredientController.addIngredient);
+  app.route("/api/ingredient/:id")
+    .get(middleware.checkToken, ingredientController.getOneIngredient)
+    .put(middleware.checkToken, ingredientController.updateInfoRestaurant)
 
   app.post('/', function(req, res){
     console.log(req.body.user);

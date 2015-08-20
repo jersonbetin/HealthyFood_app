@@ -124,9 +124,36 @@ function updateInfoAdmin(req, res){
   });
 }
 
+//delete admin
+function deleteAdmin(req, res){
+  adminsModel.findOne({user:req.params.id}, function(err, admin){
+    console.log(err);
+    if(!err){
+      if(admin){
+        admin.remove(function(err){
+          if(!err){            
+            res
+            .status(200)
+            .send({
+              "message":"the admin was removed"
+            });
+          }else{
+            personalCodesStatus.res500(res);
+          }
+        });
+      }else{
+        personalCodesStatus.res404(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
+
 module.exports = {
   addAdmin : addAdmin,
   getAllAdmins : getAllAdmins,
   getOneAdmin : getOneAdmin,
-  updateInfoAdmin : updateInfoAdmin
+  updateInfoAdmin : updateInfoAdmin,
+  deleteAdmin : deleteAdmin
 };

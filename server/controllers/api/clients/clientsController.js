@@ -128,9 +128,37 @@ function updateInfoClient(req, res){
     }
   });
 }
+
+//delete client
+function deleteClient(req, res){
+  clientsModel.findOne({email:req.params.id}, function(err, client){
+    console.log(err);
+    if(!err){
+      if(client){
+        client.remove(function(err){
+          if(!err){            
+            res
+            .status(200)
+            .send({
+              "message":"the client was removed"
+            });
+          }else{
+            personalCodesStatus.res500(res);
+          }
+        });
+      }else{
+        personalCodesStatus.res404(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
+
 module.exports = {
  getAllClients : getAllClients,
  addClient : addClient,
  getOneClient : getOneClient,
- updateInfoClient : updateInfoClient
+ updateInfoClient : updateInfoClient,
+ deleteClient : deleteClient
 }
