@@ -1,17 +1,15 @@
 "use strict";
-var helpers = require('../../helpers/helpers');
+var helpers = require('../controllers/helpers/helpers');
 var isDefined = helpers.isDefined;
 
-var structureAdmin = {
+var structureLogin = {
   "user" : "",
   "pass" : "",
-  "name" : {
-    "first" : "",
-    "last" : ""
-  }
+  "rol": ""
 };
 
-function validateAdmins(structure, next){
+
+function validateLogin(structure, next){
   console.log('validando', structure);
   var data = [];
   var testAuthorize = true;
@@ -22,7 +20,7 @@ function validateAdmins(structure, next){
         "value" : structure.user
       }
     });
-  }else{
+  }else{    
     data.push({
       "user":{
         "status" : "error",
@@ -31,6 +29,7 @@ function validateAdmins(structure, next){
     });
     testAuthorize = false;
   }
+
   if(isDefined(structure.pass)){
     data.push({
       "pass":{
@@ -48,55 +47,26 @@ function validateAdmins(structure, next){
 
     testAuthorize = false;
   }
-  if(isDefined(structure.name)){
-    if(isDefined(structure.name.first)){
-      data.push({
-        "name.first" : {
-          "status" : "ok",
-          "value" : structure.name.first
-        }
-      });
-    }else{
-      data.push({
-        "name.first": {
-          "status" : "error",
-          "value" : "the firt name is undefined"
-        }
-      });
 
-      testAuthorize = false;
-    }
-
-    if(isDefined(structure.name.last)){
-      data.push({
-        "name.last":{
-          "status" : "ok",
-          "value" : structure.name.last
-        }
-      });
-    }else{
-      data.push({
-        "name.last":{
-          "status" : "error",
-          "value" : "the last name is undefined"
-        }
-      });  
-
-      testAuthorize = false;    
-    }
+  if(isDefined(structure.rol)){
+    data.push({
+      "rol":{
+        "status" : "ok",
+        "value" : structure.rol
+      }
+    });
   }else{
     data.push({
-      "name":{
+      "rol":{
         "status" : "error",
-        "value" : "the name is undefined"
+        "value" : "the rol is undefined"
       }
-    });  
+    });
 
     testAuthorize = false;
   }
   next(testAuthorize, data);
 }
-
 
 function resToIncorrectStructure(req, res, data){
   if(isDefined(req.query.errors) && req.query.errors=="verbose"){
@@ -105,13 +75,13 @@ function resToIncorrectStructure(req, res, data){
       .send({
         "error":{
           "reason" : "badstructure",
-          "message" : "you have an error in structureAdmin to be sent",
+          "message" : "you have an error in structureLogin to be sent",
           "error" : {
             data:data
           },
           "help" : {
-            "message" : " you structureAdmin object must have the following structure",
-            "structure": structureAdmin
+            "message" : " you structureLogin object must have the following structure",
+            "structure": structureLogin
           }
         }
       });
@@ -121,18 +91,17 @@ function resToIncorrectStructure(req, res, data){
       .send({
         "error":{
           "reason" : "badstructure",
-          "message" : "you have an error in structureAdmin to be sent",
+          "message" : "you have an error in structureLogin to be sent",
           "help" : {
-            "message" : " you structureAdmin object must have the following structure",
-            "structure": structureAdmin
+            "message" : " you structureLogin object must have the following structure",
+            "structure": structureLogin
           }
         }
       });
   }
 }
 
-
 module.exports = {
-  validateAdmins : validateAdmins,
+  validateLogin : validateLogin,
   resToIncorrectStructure : resToIncorrectStructure
-};
+}

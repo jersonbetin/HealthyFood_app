@@ -5,6 +5,7 @@ var helpers = require('../../helpers/helpers');
 var validateStructure = require('./ingredientValidation');
 var personalCodesStatus = require('./personalCodeclient');
 
+//add new ingredient
 function addIngredient(req, res){
   var validate = validateStructure.validateIngredient;
   validate(req.body, function(textAuthorized, data){
@@ -35,6 +36,7 @@ function addIngredient(req, res){
   });
 }
 
+//get all ingredients in the data base
 function getIngredients(req, res){
   ingredientModel.find(function(err, models){
     if(!err){
@@ -47,6 +49,7 @@ function getIngredients(req, res){
   });
 }
 
+//get one ingredient in the data base
 function getOneIngredient(req, res){
   var nameIngredient = (req.params.id).toLowerCase();
   ingredientModel.findOne({name:nameIngredient}, function(err, model){
@@ -60,7 +63,8 @@ function getOneIngredient(req, res){
   });
 }
 
-function updateInfoRestaurant(req, res){
+//update one criterion
+function updateInfoIngredient(req, res){
   var nameIngredient = (req.params.id).toLowerCase();
   ingredientModel.findOne({name: nameIngredient}, function(err, ingredient){
     if(!err){
@@ -95,9 +99,36 @@ function updateOneCriterion(req, res, model){
     }
   });
 }
+
+//delete ingredient
+function deleteIngredient(req, res){
+  ingredientModel.findOne({name:req.params.id}, function(err, ingredient){
+    console.log(err);
+    if(!err){
+      if(ingredient){
+        ingredient.remove(function(err){
+          if(!err){            
+            res
+            .status(200)
+            .send({
+              "message":"the ingredient was removed"
+            });
+          }else{
+            personalCodesStatus.res500(res);
+          }
+        });
+      }else{
+        personalCodesStatus.res404(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
 module.exports = {
   getIngredients : getIngredients,
   addIngredient : addIngredient,
   getOneIngredient : getOneIngredient,
-  updateInfoRestaurant : updateInfoRestaurant
+  updateInfoIngredient : updateInfoIngredient,
+  deleteIngredient : deleteIngredient
 };

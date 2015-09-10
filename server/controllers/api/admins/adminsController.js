@@ -9,13 +9,13 @@ function addAdmin(req, res){
   var validate = validateStructure.validateAdmins;
   validateStructure.validateAdmins(req.body, function(testAuthorized, data){   
     if(testAuthorized){
-      var passSha1 = helpers.encrypt(req.body.pass);
+      var passSha1 = helpers.encrypt((req.body.pass).toLowerCase());
       adminsModel.create({
-        user:req.body.user,
+        user:(req.body.user).toLowerCase(),
         password: passSha1,
         name: {
-          first : req.body.name.first,
-          last : req.body.name.last
+          first : (req.body.name.first).toLowerCase(),
+          last : (req.body.name.last).toLowerCase()
         }
       }, function(err, admin){
           if(!err){

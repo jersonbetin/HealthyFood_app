@@ -10,12 +10,15 @@ var middleware = require("../middlewares/middleware");
 module.exports = function apiRoutes(app) {
   app.all('*', function(req, res, next){
       console.log('always passes for here', req.body, req.method);
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-With");
+      console.log(req.hostname+req.originalUrl);
       next();
   });
 
   //path about admin
   app.route("/api/admin")
-    .get(middleware.checkToken, adminController.getAllAdmins)
+    .get(middleware.checkToken, adminController.getAllAdmins)//
     .post(adminController.addAdmin);
   app.route("/api/admin/:id")
     .get(middleware.checkToken, adminController.getOneAdmin)
@@ -46,7 +49,13 @@ module.exports = function apiRoutes(app) {
     .post(middleware.checkToken,ingredientController.addIngredient);
   app.route("/api/ingredient/:id")
     .get(middleware.checkToken, ingredientController.getOneIngredient)
-    .put(middleware.checkToken, ingredientController.updateInfoRestaurant)
+    .put(middleware.checkToken, ingredientController.updateInfoIngredient)
+    .delete(middleware.checkToken, ingredientController.deleteIngredient);
+  
+  //authenticated login
+  app.route('/api/auth')
+    .post(middleware.auth);
+
 
   app.post('/', function(req, res){
     console.log(req.body.user);
