@@ -95,10 +95,50 @@ function auth(req, res, next){
         });
       }else{
         if(req.body.rol=="client"){
-
+          clientsModel.findOne({email:(req.body.user).toLowerCase(), password:passSha1}, function(err, client){
+            console.log(client);
+            if(err){
+              res500(res);
+            }else{
+              if(client){
+                var user = {
+                  _id:client._id,
+                  rol:"client"
+                };
+                var service = createToken(user);
+                res
+                .status(200)
+                .send({
+                  token:service
+                })
+              }else{
+                res404(res);
+              }
+            }
+          });
         }else{
           if(req.body.rol=="restaurant"){
-
+            restaurantModel.findOne({user:(req.body.user).toLowerCase(), password:passSha1}, function(err, restaurant){
+              console.log(restaurant);
+              if(err){
+                res500(res);
+              }else{
+                if(restaurant){
+                  var user = {
+                    _id:restaurant._id,
+                    rol:"restaurant"
+                  };
+                  var service = createToken(user);
+                  res
+                  .status(200)
+                  .send({
+                    token:service
+                  })
+                }else{
+                  res404(res);
+                }
+              }
+            });
           }else{
             res
             .status(404)
