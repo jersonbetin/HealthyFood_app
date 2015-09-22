@@ -40,3 +40,9 @@
   "name" : "Harinas integrales",
   "description" : "Harinas integrales mejor pan"
 }
+
+//structure disease
+{
+  "name": "colon irritado",
+  "description": "Dolor en el abdomen"
+}

@@ -5,6 +5,7 @@ var adminController = require("../controllers/api/admins/adminsController");
 var clientController = require("../controllers/api/clients/clientsController");
 var restaurantController = require("../controllers/api/restaurants/restaurantsController");
 var ingredientController = require("../controllers/api/ingredients/ingredientController");
+var diseaseController = require("../controllers/api/disease/diseasesController");
 var middleware = require("../middlewares/middleware");
 
 module.exports = function apiRoutes(app) {
@@ -52,16 +53,21 @@ module.exports = function apiRoutes(app) {
     .put(middleware.checkToken, ingredientController.updateInfoIngredient)
     .delete(middleware.checkToken, ingredientController.deleteIngredient);
   
+  //path about diseases
+
+  app.route("/api/disease")
+    .post(diseaseController.addDisease);
+
   //authenticated login
   app.route('/api/auth')
     .post(middleware.auth);
 
 
-  app.post('/', function(req, res){
+  /*app.post('/', function(req, res){
     console.log(req.body.user);
     var service = require("../controllers/helpers/service").createToken;
     res.status(200).send({token:service(req.body.user)});
-  });
+  });*/
 
 
   //config: when don't exist the path

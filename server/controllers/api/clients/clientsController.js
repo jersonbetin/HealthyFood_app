@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 var mongoose = require('mongoose');
 var clientsModel = require('../../../models/clients').client; 
 var helpers = require('../../helpers/helpers');
@@ -7,7 +7,7 @@ var personalCodesStatus = require('./personalCodeclient');
 
 //add new client
 function addClient(req, res){
-  console.log("add ",req.body);
+  // console.log("add ",req.body);
   var validate = validateStructure.validateClients;
   validate(req.body, function(testAuthorized, data){
     console.log("entro aqui");
