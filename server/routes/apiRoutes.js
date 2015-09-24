@@ -56,7 +56,18 @@ module.exports = function apiRoutes(app) {
   //path about diseases
 
   app.route("/api/disease")
-    .post(diseaseController.addDisease);
+    .post(middleware.checkToken, diseaseController.addDisease)
+    .get(middleware.checkToken, diseaseController.getDiseases);
+  app.route("/api/disease/:id")
+    .get(middleware.checkToken,  diseaseController.getOneDisease)
+    .put(middleware.checkToken, diseaseController.updateInfoDisease)
+    .delete(middleware.checkToken, diseaseController.deleteDisease);
+
+  //path about diseases clients
+  app.route("/api/:id/disease")
+    .get(diseaseController.getDiseasesClient)
+    .post(diseaseController.addDiseaseClient)
+    .delete(diseaseController.deleteDiseaseClient);
 
   //authenticated login
   app.route('/api/auth')

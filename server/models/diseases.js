@@ -10,7 +10,7 @@ var diseaseSchema = new Schema({
 //client sick(cliente enfermo)
 var diseaseClientSchema = new Schema({
   idDisease: {type:Schema.Types.ObjectId, ref: 'disease'},
-  idclient: {type:Schema.Types.ObjectId, ref: 'client'}
+  idClient: {type:Schema.Types.ObjectId, ref: 'client'}
 });
 
 exports.disease = mongoose.model('disease', diseaseSchema);
