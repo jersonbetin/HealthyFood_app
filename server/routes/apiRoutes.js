@@ -53,8 +53,7 @@ module.exports = function apiRoutes(app) {
     .put(middleware.checkToken, ingredientController.updateInfoIngredient)
     .delete(middleware.checkToken, ingredientController.deleteIngredient);
   
-  //path about diseases
-
+  //path about diseases 
   app.route("/api/disease")
     .post(middleware.checkToken, diseaseController.addDisease)
     .get(middleware.checkToken, diseaseController.getDiseases);
@@ -62,6 +61,12 @@ module.exports = function apiRoutes(app) {
     .get(middleware.checkToken,  diseaseController.getOneDisease)
     .put(middleware.checkToken, diseaseController.updateInfoDisease)
     .delete(middleware.checkToken, diseaseController.deleteDisease);
+
+  //path about disease ingredient
+  app.route("/api/:id/ingredient")
+    .post(ingredientController.addDiseaseIngredient)
+    .get(ingredientController.getDiseasesIngredient)
+    .delete(ingredientController.deleteDiseaseIngredient);
 
   //path about diseases clients
   app.route("/api/:id/disease")

@@ -188,7 +188,7 @@ function getDiseasesClient(req, res){
 			if(client){
 				diseaseClientModel.find({idClient: client._id}).populate("idDisease").exec(function(err, diseasesClient){
 					if(!err){
-						if(diseaseClient){
+						if(diseasesClient){
 							res
 							.status(200)
 							.send({diseasesClient:diseasesClient});

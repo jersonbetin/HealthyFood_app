@@ -1,6 +1,8 @@
 "use strict"
 var mongoose = require('mongoose');
 var ingredientModel = require('../../../models/ingredient').ingredient; 
+var diseaseIngredientModel = require('../../../models/ingredient').deseaseIngredient;
+var diseaseModel = require('../../../models/diseases').disease;
 var helpers = require('../../helpers/helpers');
 var validateStructure = require('./ingredientValidation');
 var personalCodesStatus = require('./personalCodeclient');
@@ -125,10 +127,130 @@ function deleteIngredient(req, res){
     }
   });
 }
+
+
+// code disease ingredient 
+function res404Disease(res){          
+  res
+    .status(404)
+    .send({
+      "error":{
+        "error":"diseaseDoesntExists",
+        "info" : "This error occurs when an disease doesn't exists"
+      }
+  });
+}
+//add disease ingredient
+function addDiseaseIngredient(req, res){
+  console.log(diseaseIngredientModel);
+  diseaseModel.findOne({_id:req.params.id}, function(err, disease){
+    if(!err){
+      if(disease){        
+        var structure = {
+          isRecommended : req.body.isRecommended,
+          idDisease : req.params.id,
+          idIngredient : req.body.idIngredient
+        };
+        validateStructure.validateDiseaseIngredient(structure, function(testAuthorize, data){
+          if(testAuthorize){
+            diseaseIngredientModel.create(structure, function(err, diseaseIngredient){
+              if(!err){
+                var diseaseIngredientCreate = {
+                  isRecommend: diseaseIngredient.isRecommended,
+                  idDisease : diseaseIngredient.idDisease,
+                  idIngredient : diseaseIngredient.idIngredient
+                };
+                res
+                  .status(201)
+                  .send({
+                    diseaseIngredientCreate : diseaseIngredientCreate
+                  });
+              }else{
+                personalCodesStatus.res500(res);
+              }
+            });
+          }else{
+            validateStructure.resToIncorrectStructureDiseaseIng(req, res, data);
+          }
+        });
+      }else{
+        res404Disease(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
+
+//get diseases ingredient
+function getDiseasesIngredient(req, res){
+  console.log(req.params.id);
+  diseaseModel.findOne({_id:req.params.id}, function(err, disease){
+    if(!err){
+      if(disease){
+        diseaseIngredientModel.find({idDisease: disease._id}).populate("idIngredient").exec(function(err, diseasesIngredient){
+          if(!err){
+            if(diseasesIngredient){
+              res
+              .status(200)
+              .send({diseasesIngredient:diseasesIngredient});
+            }else{
+              personalCodesStatus.res404(res);
+            }           
+          }else{
+            personalCodesStatus.res500(res);
+          }
+        });       
+      }else{                
+          res404Disease(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
+
+//Delete disease ingredient
+function deleteDiseaseIngredient(req, res){
+  console.log(req.params.id);
+  diseaseModel.findOne({_id:req.params.id}, function(err, disease){
+    if(!err){
+      if(disease){
+        diseaseClientModel.findOne({idIngredient:req.body.idDisease, idDisease:disease._id}, function(err, diseaseIngredient){
+          if(!err){
+            if(diseaseIngredient){
+              diseaseIngredient.remove(function(err){
+                if(!err){
+                  res
+                    .status(200)
+                    .send({"message":"the disease ingredient was removed"});
+                }else{
+                  personalCodesStatus.res500(res);
+                }
+              });
+            }else{
+              res404Disease(res);
+            }
+          }else{
+            personalCodesStatus.res500(res);
+          }
+        });
+
+      }else{
+        personalCodesStatus.res404(res);
+      }
+    }else{
+      personalCodesStatus.res500(res);
+    }
+  });
+}
 module.exports = {
   getIngredients : getIngredients,
   addIngredient : addIngredient,
   getOneIngredient : getOneIngredient,
   updateInfoIngredient : updateInfoIngredient,
-  deleteIngredient : deleteIngredient
+  deleteIngredient : deleteIngredient,
+  addDiseaseIngredient : addDiseaseIngredient,
+  getDiseasesIngredient : getDiseasesIngredient,
+  deleteDiseaseIngredient : deleteDiseaseIngredient
 };
