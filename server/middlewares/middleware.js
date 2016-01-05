@@ -145,7 +145,7 @@ function auth(req, res, next){
             .send({
               "error":{
                 "message":"rol not faund",
-                "error":"rolNotFaund"
+                "error":"rolNotFound"
               }
             });
           }

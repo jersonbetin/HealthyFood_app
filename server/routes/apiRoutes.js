@@ -6,6 +6,7 @@ var clientController = require("../controllers/api/clients/clientsController");
 var restaurantController = require("../controllers/api/restaurants/restaurantsController");
 var ingredientController = require("../controllers/api/ingredients/ingredientController");
 var diseaseController = require("../controllers/api/disease/diseasesController");
+var plateMenuController = require("../controllers/api/plate/plateController");
 var middleware = require("../middlewares/middleware");
 
 module.exports = function apiRoutes(app) {
@@ -18,61 +19,72 @@ module.exports = function apiRoutes(app) {
   });
 
   //path about admin
-  app.route("/api/admin")
+  app.route("/api/admins")
     .get(middleware.checkToken, adminController.getAllAdmins)//
     .post(adminController.addAdmin);
-  app.route("/api/admin/:id")
+  app.route("/api/admins/:id")
     .get(middleware.checkToken, adminController.getOneAdmin)
     .put(middleware.checkToken, adminController.updateInfoAdmin) 
     .delete(middleware.checkToken, adminController.deleteAdmin); 
 
   //path about clientes
-  app.route("/api/client")
+  app.route("/api/clients")
     .get(middleware.checkToken, clientController.getAllClients)
     .post(clientController.addClient);
-  app.route("/api/client/:id")
+  app.route("/api/clients/:id")
     .get(middleware.checkToken, clientController.getOneClient)
     .put(middleware.checkToken, clientController.updateInfoClient)
     .delete(middleware.checkToken, clientController.deleteClient);
 
   //path about restaurant
-  app.route("/api/restaurant")
+  app.route("/api/restaurants")
     .get(middleware.checkToken, restaurantController.getRestaurants)
     .post(restaurantController.addRestaurant);
-  app.route("/api/restaurant/:id")
+  app.route("/api/restaurants/:id")
     .get(middleware.checkToken, restaurantController.getOneRestaurant)
     .put(middleware.checkToken, restaurantController.updateInfoRestaurant)
     .delete(middleware.checkToken, restaurantController.deleteRestaurant);
 
   //path about ingredient
-  app.route("/api/ingredient")
+  app.route("/api/ingredients")
     .get(middleware.checkToken,ingredientController.getIngredients)
     .post(middleware.checkToken,ingredientController.addIngredient);
-  app.route("/api/ingredient/:id")
+  app.route("/api/ingredients/:id")
     .get(middleware.checkToken, ingredientController.getOneIngredient)
     .put(middleware.checkToken, ingredientController.updateInfoIngredient)
     .delete(middleware.checkToken, ingredientController.deleteIngredient);
   
   //path about diseases 
-  app.route("/api/disease")
+  app.route("/api/diseases")
     .post(middleware.checkToken, diseaseController.addDisease)
     .get(middleware.checkToken, diseaseController.getDiseases);
-  app.route("/api/disease/:id")
+  app.route("/api/diseases/:id")
     .get(middleware.checkToken,  diseaseController.getOneDisease)
     .put(middleware.checkToken, diseaseController.updateInfoDisease)
     .delete(middleware.checkToken, diseaseController.deleteDisease);
 
   //path about disease ingredient
-  app.route("/api/:id/ingredient")
-    .post(ingredientController.addDiseaseIngredient)
-    .get(ingredientController.getDiseasesIngredient)
-    .delete(ingredientController.deleteDiseaseIngredient);
+  app.route("/api/:id/ingredients")
+    .post(middleware.checkToken, ingredientController.addDiseaseIngredient)
+    .get(middleware.checkToken, ingredientController.getDiseasesIngredient)
+    .delete(middleware.checkToken, ingredientController.deleteDiseaseIngredient);
 
   //path about diseases clients
-  app.route("/api/:id/disease")
-    .get(diseaseController.getDiseasesClient)
-    .post(diseaseController.addDiseaseClient)
-    .delete(diseaseController.deleteDiseaseClient);
+  app.route("/api/:id/diseases")
+    .get(middleware.checkToken, diseaseController.getDiseasesClient)
+    .post(middleware.checkToken, diseaseController.addDiseaseClient)
+    .delete(middleware.checkToken, diseaseController.deleteDiseaseClient);
+
+  //path about plate and menu
+  app.route("/api/:id/plates")
+    .get(middleware.checkToken, plateMenuController.getMenu)
+    .post(middleware.checkToken, plateMenuController.addPlateAndMenu);
+
+  app.route("/api/plates/:id/ingredients")
+    .post(middleware.checkToken, plateMenuController.AddPlateIngredient);
+
+  app.route("/api/:id/plates/:plate")
+    .get(plateMenuController.getOnePlate);
 
   //authenticated login
   app.route('/api/auth')

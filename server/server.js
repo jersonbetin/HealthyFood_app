@@ -20,11 +20,11 @@ function start(){
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error: '));
     db.once('open', function callback(){
+      app.use(bodyParser.urlencoded({ extended : true }));      
+      app.use(bodyParser.json());
       console.log('conexion establecida');
       console.log('Database HealthyFood');
       app.use(logger());
-      app.use(bodyParser.urlencoded({ extended : true }));      
-      app.use(bodyParser.json());
       apiRoutes(app);
       app.listen(server.configuration.port, serverListeningHandler);
     });

@@ -11,7 +11,7 @@ var plateSchema = new Schema({
 
 var menuSchema = new Schema({
   idRestaurant: {type:Schema.Types.ObjectId, ref: 'restaurant'},
-  idplate: {type:Schema.Types.ObjectId, ref: 'plate'}
+  idPlate: {type:Schema.Types.ObjectId, ref: 'plate'}
 });
 
 var favoritePlateSchema = new Schema({
