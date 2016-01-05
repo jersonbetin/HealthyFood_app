@@ -7,7 +7,7 @@ var ingredientSchema = new Schema({
   description: {type:String, default:''}
 });
 
-//ingrediente enfermedad
+//ingredient diseases
 var deseaseIngredientSchema = new Schema({
   isRecommended:{type:Boolean, default:false},
   idDisease: {type:Schema.Types.ObjectId, ref: 'disease'},
