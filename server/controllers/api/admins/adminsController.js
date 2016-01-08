@@ -62,12 +62,12 @@ function getAllAdmins(req, res){
 
 //get one admin in the data base
 function getOneAdmin(req, res){
-  adminsModel.findOne({user:req.params.id}, {password:0}, function(err, admins){
+  adminsModel.findOne({user:req.params.id}, {password:0}, function(err, admin){
     if(!err){
       res
       .status(200)
       .send({
-        admins:admins
+        admin:admin
       });
     }else{
       personalCodesStatus.res500(res);

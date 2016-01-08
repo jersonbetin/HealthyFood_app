@@ -80,6 +80,7 @@ function auth(req, res, next){
             if(admin){
               var user = {
                 _id:admin._id,
+                user:admin.user,
                 rol:"admin"
               };
               var service = createToken(user);
@@ -103,6 +104,7 @@ function auth(req, res, next){
               if(client){
                 var user = {
                   _id:client._id,
+                  user:client.user,
                   rol:"client"
                 };
                 var service = createToken(user);
@@ -126,6 +128,7 @@ function auth(req, res, next){
                 if(restaurant){
                   var user = {
                     _id:restaurant._id,
+                    user: restaurant.user,
                     rol:"restaurant"
                   };
                   var service = createToken(user);

@@ -10,18 +10,23 @@ var plateMenuController = require("../controllers/api/plate/plateController");
 var middleware = require("../middlewares/middleware");
 
 module.exports = function apiRoutes(app) {
-  app.all('*', function(req, res, next){
+  app.use(function(req, res, next){
+      debugger;
       console.log('always passes for here', req.body, req.method);
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "X-Requested-With");
-      console.log(req.hostname+req.originalUrl);
-      next();
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'get, post, delete, put, patch');
+      res.header('Access-Control-Allow-Headers', 'AUTHORIZATION, Content-Type');
+      if(req.method === "OPTIONS"){
+        res.status(200).end();
+      }else{
+        next();
+      }
   });
 
   //path about admin
   app.route("/api/admins")
-    .get(middleware.checkToken, adminController.getAllAdmins)//
-    .post(adminController.addAdmin);
+    .get(adminController.getAllAdmins)
+    .post(middleware.checkToken, adminController.addAdmin);
   app.route("/api/admins/:id")
     .get(middleware.checkToken, adminController.getOneAdmin)
     .put(middleware.checkToken, adminController.updateInfoAdmin) 
