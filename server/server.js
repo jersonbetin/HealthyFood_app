@@ -5,7 +5,7 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
-
+var cors = require('cors');
 
 var apiRoutes = require("./routes/apiRoutes");
 
@@ -25,6 +25,7 @@ function start(){
       console.log('conexion establecida');
       console.log('Database HealthyFood');
       app.use(logger());
+      app.use(cors());
       apiRoutes(app);
       app.listen(server.configuration.port, serverListeningHandler);
     });

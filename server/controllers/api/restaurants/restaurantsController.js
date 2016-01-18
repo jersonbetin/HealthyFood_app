@@ -1,6 +1,6 @@
 "use strict"
 var mongoose = require('mongoose');
-var restaurantModel = require('../../../models/restaurant').restaurant; 
+var restaurantModel = require('../../../models/restaurant').restaurant;
 var helpers = require('../../helpers/helpers');
 var validateStructure = require('./restaurantsValidation');
 var personalCodesStatus = require('./personalCodeclient');
@@ -14,7 +14,7 @@ function addRestaurant(req, res){
       var passSha1 = helpers.encrypt(req.body.pass);
       restaurantModel.create({
         user : req.body.user,
-        password : passSha1,  
+        password : passSha1,
         email : req.body.email,
         name : req.body.name,
         phone : req.body.phone,
@@ -26,7 +26,7 @@ function addRestaurant(req, res){
       }, function(err, restaurant){
         if(!err){
           var restaurantCreate = {
-            "user" : restaurant.user, 
+            "user" : restaurant.user,
             "email" : restaurant.email,
             "name" : restaurant.name,
             "phone" : restaurant.phone,
@@ -44,7 +44,7 @@ function addRestaurant(req, res){
               personalCodesStatus.res406(res);
             }else{
               personalCodesStatus.res500(res);
-            }            
+            }
           }
       });
     }else{
@@ -54,13 +54,23 @@ function addRestaurant(req, res){
 }
 
 //get all Restaurants in the data base
-function getRestaurants(req, res){
-  restaurantModel.find({}, {password:0}, function(err, Restaurants){
+function searchRestaurants(req, res){
+  var query ={};
+
+  if(req.query.first){
+    query .name .first=req.query.first;
+  }
+
+  if(req.query.last){
+    query .name .last=req.query.last;
+  }
+
+  restaurantModel.find(query, {password:0}).sort("name").exec(function(err, restaurants){
     if(!err){
       res
       .status(200)
       .send({
-        Restaurants : Restaurants
+        restaurants : restaurants
       });
     }else{
       personalCodesStatus.res500(res);
@@ -70,12 +80,12 @@ function getRestaurants(req, res){
 
 //get one Restaurant in the data base
 function getOneRestaurant(req, res){
-  restaurantModel.findOne({user:req.params.id}, {password:0}, function(err, Restaurant){
+  restaurantModel.findOne({user:req.params.id}, {password:0}, function(err, restaurant){
     if(!err){
       res
       .status(200)
       .send({
-        Restaurant : Restaurant
+        restaurant : restaurant
       });
     }else{
       personalCodesStatus.res500(res);
@@ -83,7 +93,7 @@ function getOneRestaurant(req, res){
   });
 }
 
-//update one criterion 
+//update one criterion
 function updateOneCriterion(req, res, model){
   var isDefined = helpers.isDefined;
 
@@ -144,12 +154,13 @@ function updateInfoRestaurant(req, res){
 
 //delete restaurant
 function deleteRestaurant(req, res){
+  debugger;
   restaurantModel.findOne({user:req.params.id}, function(err, restaurant){
     console.log(err);
     if(!err){
       if(restaurant){
         restaurant.remove(function(err){
-          if(!err){            
+          if(!err){
             res
             .status(200)
             .send({
@@ -171,7 +182,7 @@ function deleteRestaurant(req, res){
 
 module.exports = {
   addRestaurant : addRestaurant,
-  getRestaurants : getRestaurants,
+  searchRestaurants : searchRestaurants,
   getOneRestaurant : getOneRestaurant,
   updateInfoRestaurant : updateInfoRestaurant,
   deleteRestaurant : deleteRestaurant

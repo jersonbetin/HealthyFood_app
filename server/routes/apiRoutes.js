@@ -14,27 +14,23 @@ module.exports = function apiRoutes(app) {
       debugger;
       console.log('always passes for here', req.body, req.method);
       res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'get, post, delete, put, patch');
+      res.header('Access-Control-Allow-Methods', '*');
       res.header('Access-Control-Allow-Headers', 'AUTHORIZATION, Content-Type');
-      if(req.method === "OPTIONS"){
-        res.status(200).end();
-      }else{
-        next();
-      }
+      next();
   });
 
   //path about admin
   app.route("/api/admins")
-    .get(adminController.getAllAdmins)
+    .get(middleware.checkToken, adminController.getAllAdmins)
     .post(middleware.checkToken, adminController.addAdmin);
   app.route("/api/admins/:id")
     .get(middleware.checkToken, adminController.getOneAdmin)
-    .put(middleware.checkToken, adminController.updateInfoAdmin) 
-    .delete(middleware.checkToken, adminController.deleteAdmin); 
+    .put(middleware.checkToken, adminController.updateInfoAdmin)
+    .delete(middleware.checkToken, adminController.deleteAdmin);
 
   //path about clientes
   app.route("/api/clients")
-    .get(middleware.checkToken, clientController.getAllClients)
+    .get(middleware.checkToken, clientController.searchClients)
     .post(clientController.addClient);
   app.route("/api/clients/:id")
     .get(middleware.checkToken, clientController.getOneClient)
@@ -43,7 +39,7 @@ module.exports = function apiRoutes(app) {
 
   //path about restaurant
   app.route("/api/restaurants")
-    .get(middleware.checkToken, restaurantController.getRestaurants)
+    .get(middleware.checkToken, restaurantController.searchRestaurants)
     .post(restaurantController.addRestaurant);
   app.route("/api/restaurants/:id")
     .get(middleware.checkToken, restaurantController.getOneRestaurant)
@@ -58,8 +54,8 @@ module.exports = function apiRoutes(app) {
     .get(middleware.checkToken, ingredientController.getOneIngredient)
     .put(middleware.checkToken, ingredientController.updateInfoIngredient)
     .delete(middleware.checkToken, ingredientController.deleteIngredient);
-  
-  //path about diseases 
+
+  //path about diseases
   app.route("/api/diseases")
     .post(middleware.checkToken, diseaseController.addDisease)
     .get(middleware.checkToken, diseaseController.getDiseases);

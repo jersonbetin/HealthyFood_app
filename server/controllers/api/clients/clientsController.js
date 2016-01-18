@@ -1,6 +1,6 @@
 "use strict";
 var mongoose = require('mongoose');
-var clientsModel = require('../../../models/clients').client; 
+var clientsModel = require('../../../models/clients').client;
 var helpers = require('../../helpers/helpers');
 var validateStructure = require('./clientsValidation');
 var personalCodesStatus = require('./personalCodeclient');
@@ -41,7 +41,7 @@ function addClient(req, res){
               personalCodesStatus.res406(res);
             }else{
               personalCodesStatus.res500(res);
-            }            
+            }
           }
       });
     }else{
@@ -49,9 +49,30 @@ function addClient(req, res){
     }
   });
 }
-//get all clients in the data base
-function getAllClients(req, res){
-  clientsModel.find({}, {password:0}, function(err, clients){
+
+//get client by criteria
+function searchClients(req, res){
+  console.log(req.query);
+
+  if(req.query.first && req.query.last){
+    var query={
+      "name.first":{ $regex: req.query.first},
+      "name.last":{ $regex: req.query.last}
+    };
+  }else{
+    if(req.query.first){
+      var query={"name.first":{ $regex: req.query.first} };
+    }
+    if(req.query.last){
+      var query={"name.last":{ $regex: req.query.last}};
+    }
+    if(req.query.email){
+      var query={"email":{ $regex: req.query.email}};
+    }
+  }
+  console.log(query);
+
+  clientsModel.find(query, {password:0}).sort("name").exec(function(err, clients){
     if(!err){
       res
       .status(200)
@@ -78,11 +99,12 @@ function getOneClient(req, res){
   });
 }
 
-//update one criterion 
+
+//update one criterion
 function updateOneCriterion(req, res, model){
   var isDefined = helpers.isDefined;
   var info = {};
-  if (isDefined(req.body.name)){    
+  if (isDefined(req.body.name)){
     if (isDefined(req.body.name.first)) {
      model.name.first= req.body.name.first;
     }
@@ -136,7 +158,7 @@ function deleteClient(req, res){
     if(!err){
       if(client){
         client.remove(function(err){
-          if(!err){            
+          if(!err){
             res
             .status(200)
             .send({
@@ -156,7 +178,7 @@ function deleteClient(req, res){
 }
 
 module.exports = {
- getAllClients : getAllClients,
+ searchClients : searchClients,
  addClient : addClient,
  getOneClient : getOneClient,
  updateInfoClient : updateInfoClient,
